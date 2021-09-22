@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - action.yml
-      - .github/workflows/Module-PolicyAssignment-1.0.yml
+      - .github/workflows/Module-PolicyAssignment.yml
       - Modules/PolicyAssignment/1.0/**
       - Scripts/**
 
