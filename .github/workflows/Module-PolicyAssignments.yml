@@ -1,12 +1,12 @@
-name: PolicyAssignment 1.0
+name: PolicyAssignments 1.0
 
 on:
   workflow_dispatch:
   push:
     paths:
       - action.yml
-      - .github/workflows/Module-PolicyAssignment.yml
-      - Modules/PolicyAssignment/1.0/**
+      - .github/workflows/Module-PolicyAssignments.yml
+      - Modules/PolicyAssignments/1.0/**
       - Scripts/**
 
 env:
@@ -16,8 +16,9 @@ env:
   Subscription: ${{ secrets.SUBSCRIPTION }}
   AppSecret: ${{ secrets.APP_SECRET }}
   ModulesPath: Modules
-  ModuleName: PolicyAssignment
+  ModuleName: PolicyAssignments
   ModuleVersion: '1.0'
+  Action: Deploy
 
 jobs:
   Validate:
