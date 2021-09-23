@@ -23,6 +23,9 @@
     },
     "location": {
       "value": "westeurope"
+    },
+    "description": {
+      "value": "Description test"
     }
   }
 }
