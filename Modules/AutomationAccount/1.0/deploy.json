@@ -26,6 +26,16 @@
                 "description": "Optional. SKU name of the account"
             }
         },
+        "modules": {
+            "type": "array",
+            "defaultValue": [],
+            "metadata": {
+                "name": "Module name",
+                "version": "Module version or specify latest to get the latest version",
+                "uri": "Module package uri, e.g. https://www.powershellgallery.com/api/v2/package",
+                "description": "Optional. List of modules to be created in the automation account"
+            }
+        },
         "runbooks": {
             "type": "array",
             "minLength": 0,
@@ -140,6 +150,13 @@
             "metadata": {
                 "description": "Optional. Customer Usage Attribution id (GUID). This GUID must be previously registered"
             }
+        },
+        "managedIdentity": {
+            "type": "object",
+            "defaultValue": {},
+            "metadata": {
+                "description": "Optional. Managed identity configuration for your automation account. Defaults to disabled."
+            }
         }
     },
     "variables": {
@@ -189,9 +206,13 @@
         "dummyRunbooks": {
             "runbookName": "dummRunbookValue"
         },
+        "dummyModules": {
+            "moduleName": "dummyModuleName"
+        },
         "jobSchedules": "[if(greater(length(parameters('jobSchedules')),0),parameters('jobSchedules'), array(variables('dummyJobSchedule')))]",
         "schedules": "[if(greater(length(parameters('schedules')),0),parameters('schedules'), array(variables('dummySchedule')))]",
         "runbooks": "[if(greater(length(parameters('runbooks')),0),parameters('runbooks'), array(variables('dummyRunbooks')))]",
+        "modules": "[if(greater(length(parameters('modules')),0),parameters('modules'), array(variables('dummyModules')))]",
         "accountSasProperties": {
             "signedServices": "b",
             "signedPermission": "r",
@@ -402,6 +423,7 @@
                     "name": "[parameters('skuName')]"
                 }
             },
+            "identity": "[if(empty(parameters('managedIdentity')), json('null'), parameters('managedIdentity'))]",
             "resources": [
                 {
                     "type": "Microsoft.Automation/automationAccounts/providers/locks",
@@ -409,7 +431,7 @@
                     "condition": "[parameters('lockForDeletion')]",
                     "name": "[concat(parameters('automationAccountName'),  '/Microsoft.Authorization/automationAccountDoNotDelete')]",
                     "dependsOn": [
-                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
+                        "[resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
                     ],
                     "comments": "Resource lock on Automation Account",
                     "properties": {
@@ -423,7 +445,7 @@
                     "condition": "[or(not(empty(parameters('diagnosticStorageAccountId'))),not(empty(parameters('workspaceId'))),not(empty(parameters('eventHubAuthorizationRuleId'))),not(empty(parameters('eventHubName'))))]",
                     "location": "[parameters('location')]",
                     "dependsOn": [
-                        "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
+                        "[resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
                     ],
                     "properties": {
                         "storageAccountId": "[if(empty(parameters('diagnosticStorageAccountId')), json('null'), parameters('diagnosticStorageAccountId'))]",
@@ -461,6 +483,42 @@
                                 "publishContentLink": {
                                     "uri": "[if(empty(variables('runbooks')[copyIndex()].runbookScriptUri), json('null'), concat(variables('runbooks')[copyIndex()].runbookScriptUri, if(contains(variables('runbooks')[copyIndex()], 'scriptStorageAccountId'), concat('?', listAccountSas(variables('runbooks')[copyIndex()].scriptStorageAccountId, '2019-04-01', variables('accountSasProperties')).accountSasToken),'')))]",
                                     "version": "[if(empty(variables('runbooks')[copyIndex()].version), json('null'), variables('runbooks')[copyIndex()].version)]"
+                                },
+                                "description": "[if(empty(variables('runbooks')[copyIndex()].description), json('null'), variables('runbooks')[copyIndex()].description)]",
+                                "logVerbose": "[if(empty(variables('runbooks')[copyIndex()].logVerbose), true(), variables('runbooks')[copyIndex()].logVerbose)]"
+                            }
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
+            ]
+        },
+        {
+            "condition": "[not(empty(array(parameters('modules'))))]",
+            "type": "Microsoft.Resources/deployments",
+            "name": "[concat('module-', if(empty(parameters('modules')), 'dummy', copyIndex('modulesCopy')))]",
+            "apiVersion": "2020-06-01",
+            "copy": {
+                "name": "modulesCopy",
+                "count": "[length(variables('modules'))]"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "type": "Microsoft.Automation/automationAccounts/modules",
+                            "name": "[concat(parameters('automationAccountName'), '/', variables('modules')[copyIndex()].moduleName)]",
+                            "apiVersion": "2015-10-31",
+                            "location": "[resourceGroup().location]",
+                            "properties": {
+                                "contentLink": {
+                                    "uri": "[parameters('modules')[copyIndex()].uri]",
+                                    "version": "[if(equals(parameters('modules')[copyIndex()].version, 'latest'), null(), parameters('modules')[copyIndex()].version)]"
                                 }
                             }
                         }
@@ -468,7 +526,7 @@
                 }
             },
             "dependsOn": [
-                "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
+                "[resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
             ]
         },
         {
