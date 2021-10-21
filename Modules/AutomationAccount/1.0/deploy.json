@@ -517,7 +517,7 @@
                             "location": "[resourceGroup().location]",
                             "properties": {
                                 "contentLink": {
-                                    "uri": "[parameters('modules')[copyIndex()].uri]",
+                                    "uri": "[toLower(format('{0}/{1}.{2}.nupkg', parameters('modules')[copyIndex()].uri, parameters('modules')[copyIndex()].moduleName, parameters('modules')[copyIndex()].version))]",
                                     "version": "[if(equals(parameters('modules')[copyIndex()].version, 'latest'), null(), parameters('modules')[copyIndex()].version)]"
                                 }
                             }
