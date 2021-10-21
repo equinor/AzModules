@@ -26,6 +26,16 @@
                 "description": "Optional. SKU name of the account"
             }
         },
+        "dependModules": {
+            "type": "array",
+            "defaultValue": [],
+            "metadata": {
+                "name": "Module name",
+                "version": "Module version or specify latest to get the latest version",
+                "uri": "Module package uri, e.g. https://www.powershellgallery.com/api/v2/package",
+                "description": "Optional. List of modules that need to be created before the other modules in the automation account"
+            }
+        },
         "modules": {
             "type": "array",
             "defaultValue": [],
@@ -213,6 +223,7 @@
         "schedules": "[if(greater(length(parameters('schedules')),0),parameters('schedules'), array(variables('dummySchedule')))]",
         "runbooks": "[if(greater(length(parameters('runbooks')),0),parameters('runbooks'), array(variables('dummyRunbooks')))]",
         "modules": "[if(greater(length(parameters('modules')),0),parameters('modules'), array(variables('dummyModules')))]",
+        "dependModules": "[if(greater(length(parameters('dependModules')),0),parameters('dependModules'), array(variables('dummyModules')))]",
         "accountSasProperties": {
             "signedServices": "b",
             "signedPermission": "r",
@@ -496,9 +507,43 @@
             ]
         },
         {
+            "condition": "[not(empty(array(parameters('dependModules'))))]",
+            "type": "Microsoft.Resources/deployments",
+            "name": "[concat('module-', if(empty(parameters('dependModules')), 'dummy', copyIndex('modulesCopy')))]",
+            "apiVersion": "2020-06-01",
+            "copy": {
+                "name": "dependModulesCopy",
+                "count": "[length(variables('dependModules'))]"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "type": "Microsoft.Automation/automationAccounts/modules",
+                            "name": "[concat(parameters('automationAccountName'), '/', variables('dependModules')[copyIndex()].moduleName)]",
+                            "apiVersion": "2015-10-31",
+                            "location": "[resourceGroup().location]",
+                            "properties": {
+                                "contentLink": {
+                                    "uri": "[toLower(format('{0}/{1}.{2}.nupkg', parameters('dependModules')[copyIndex()].uri, parameters('dependModules')[copyIndex()].moduleName, parameters('dependModules')[copyIndex()].version))]",
+                                    "version": "[if(equals(parameters('dependModules')[copyIndex()].version, 'latest'), null(), parameters('dependModules')[copyIndex()].version)]"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
+            ]
+        },
+        {
             "condition": "[not(empty(array(parameters('modules'))))]",
             "type": "Microsoft.Resources/deployments",
-            "name": "[concat('module-', if(empty(parameters('modules')), 'dummy', copyIndex('modulesCopy')))]",
+            "name": "[concat('module-', if(empty(parameters('modules')), 'dummy', copyIndex('dependModulesCopy')))]",
             "apiVersion": "2020-06-01",
             "copy": {
                 "name": "modulesCopy",
@@ -526,7 +571,8 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
+                "[resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]",
+                "dependModulesCopy"
             ]
         },
         {
