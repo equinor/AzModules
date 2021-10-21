@@ -509,7 +509,7 @@
         {
             "condition": "[not(empty(array(parameters('dependModules'))))]",
             "type": "Microsoft.Resources/deployments",
-            "name": "[concat('module-', if(empty(parameters('dependModules')), 'dummy', copyIndex('dependModulesCopy')))]",
+            "name": "[concat('dependModule-', if(empty(parameters('dependModules')), 'dummy', copyIndex('dependModulesCopy')))]",
             "apiVersion": "2020-06-01",
             "copy": {
                 "name": "dependModulesCopy",
