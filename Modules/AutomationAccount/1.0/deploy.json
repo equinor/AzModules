@@ -495,8 +495,7 @@
                                     "uri": "[if(empty(variables('runbooks')[copyIndex()].runbookScriptUri), json('null'), concat(variables('runbooks')[copyIndex()].runbookScriptUri, if(contains(variables('runbooks')[copyIndex()], 'scriptStorageAccountId'), concat('?', listAccountSas(variables('runbooks')[copyIndex()].scriptStorageAccountId, '2019-04-01', variables('accountSasProperties')).accountSasToken),'')))]",
                                     "version": "[if(empty(variables('runbooks')[copyIndex()].version), json('null'), variables('runbooks')[copyIndex()].version)]"
                                 },
-                                "description": "[if(empty(variables('runbooks')[copyIndex()].description), json('null'), variables('runbooks')[copyIndex()].description)]",
-                                "logVerbose": "[if(empty(variables('runbooks')[copyIndex()].logVerbose), true(), variables('runbooks')[copyIndex()].logVerbose)]"
+                                "description": "[if(empty(variables('runbooks')[copyIndex()].description), json('null'), variables('runbooks')[copyIndex()].description)]"
                             }
                         }
                     ]
