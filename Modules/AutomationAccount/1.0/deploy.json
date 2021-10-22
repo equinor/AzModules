@@ -860,6 +860,14 @@
             "metadata": {
                 "description": "The Name of the Automation Account."
             }
+        },
+        "managedIdentity": {
+            "condition": "[not(empty(parameters('managedIdentity')))]",
+            "type": "object",
+            "value": {
+                "objectId": "[reference(resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName')), '2020-01-13-preview', 'Full').identity.principalId]",
+                "tenantId": "[reference(resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName')), '2020-01-13-preview', 'Full').identity.tenantId]"
+            }
         }
     }
 }

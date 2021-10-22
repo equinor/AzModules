@@ -333,8 +333,7 @@ User Assigned:
     "value": {
         "type": "UserAssigned",
         "userAssignedIdentities": {
-            "<managed identity 1 resource id>",
-            "<managed identity 2 resource id>"
+            "<managed identity 1 resource id>"
         }
     }
 }
@@ -349,6 +348,7 @@ User Assigned:
 | `automationAccountResourceId`    | string | The Resource Id of the Automation Account.                 |
 | `dummyObject`                    | array  | The Name of the Automation Account.                        |
 | `dummyString`                    | array  | The Name of the Automation Account.                        |
+| `managedIdentity`                | object | Managed Identity Object Id and Tenant Id, if present       |
 
 ## Considerations
 
