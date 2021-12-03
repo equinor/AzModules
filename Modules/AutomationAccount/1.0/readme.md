@@ -22,7 +22,7 @@ This module deploys an Azure Automation Account, with resource lock.
 
 | Parameter Name                  | Type   | Default Value                | Possible values               | Description                                                                                                                                                                                                                                                                                                                                                                                                     |
 | :------------------------------ | :----- | :--------------------------- | :---------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `cuaId`                         | string |                              |                               | Optional. Customer Usage Attribution id (GUID). This GUID must be previously registered                                                                                                                                                                                                                                                                                                                         |
+| `cuaId`                         | string |                              |                               | Optional. Customer Usage Attribution ID (GUID). This GUID must be previously registered                                                                                                                                                                                                                                                                                                                         |
 | `managedIdentity`               | object | {}                           | Complex structure, see below. | Optional. Either enables a SystemAssigned managed identity, or you can provide a user assigned identity when this is supported.                                                                                                                                                                                                                                                                                 |
 | `automationAccountName`         | string |                              |                               | Required. Name of the Azure Automation Account                                                                                                                                                                                                                                                                                                                                                                  |
 | `location`                      | string | `[resourceGroup().location]` |                               | Optional. Location for all resources.                                                                                                                                                                                                                                                                                                                                                                           |
@@ -157,7 +157,7 @@ List of jobSchedules to be created in the automation account
 "jobSchedules": {
     "value": [
         {
-            "jobScheduleName": "ScalingRunbook_JobSchedule", // jobSchedule used to generate unique id
+            "jobScheduleName": "ScalingRunbook_JobSchedule", // jobSchedule used to generate unique ID
             "scheduleName": "ScalingRunbook_Schedule", // Gets or sets the schedule
             "runbookName": "ScalingRunbook", // Gets or sets the runbook
             "parameters": { // Gets or sets a list of job properties.
@@ -333,7 +333,7 @@ User Assigned:
     "value": {
         "type": "UserAssigned",
         "userAssignedIdentities": {
-            "<managed identity 1 resource id>"
+            "<managed identity 1 resource ID>"
         }
     }
 }

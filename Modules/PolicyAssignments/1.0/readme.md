@@ -17,7 +17,7 @@
 | `policyDefinitionID`   | string | Required. Specifies the ID of the policy definition or policy set definition being assigned. |              |                 |
 | `parameters`           | object | Optional. Parameters for the policy assignment if needed.                                    |              |                 |
 | `identity`             | string | Optional. The managed identity associated with the policy assignment.                        |              |                 |
-| `cuaId`                | string | Optional. Customer Usage Attribution id (GUID). This GUID must be previously registered      |              |                 |
+| `cuaId`                | string | Optional. Customer Usage Attribution ID (GUID). This GUID must be previously registered      |              |                 |
 
 
 ## Outputs
