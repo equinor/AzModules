@@ -4,7 +4,7 @@ This module deploys an Azure Automation Account, with resource lock.
 
 ## Resource Types
 
-| Resource Type                                                          | Api Version        |
+| Resource Type                                                          | API Version        |
 | :--------------------------------------------------------------------- | :----------------- |
 | `Microsoft.Automation/automationAccounts`                              | 2015-10-31         |
 | `Microsoft.Automation/automationAccounts/runbooks`                     | 2018-06-30         |
@@ -345,10 +345,10 @@ User Assigned:
 | :------------------------------- | :----- | :--------------------------------------------------------- |
 | `automationAccountName`          | string | The Name of the Automation Account.                        |
 | `automationAccountResourceGroup` | string | The Resource Group the Automation Account was deployed to. |
-| `automationAccountResourceId`    | string | The Resource Id of the Automation Account.                 |
+| `automationAccountResourceId`    | string | The Resource ID of the Automation Account.                 |
 | `dummyObject`                    | array  | The Name of the Automation Account.                        |
 | `dummyString`                    | array  | The Name of the Automation Account.                        |
-| `managedIdentity`                | object | Managed Identity Object Id and Tenant Id, if present       |
+| `managedIdentity`                | object | Managed Identity Object ID and Tenant ID, if present       |
 
 ## Considerations
 

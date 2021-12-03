@@ -4,7 +4,7 @@ This module deploys an Alert based on Activity Log
 
 ## Resource Types
 
-| Resource Type                                                    | Api Version        |
+| Resource Type                                                    | API Version        |
 | :--------------------------------------------------------------- | :----------------- |
 | `Microsoft.Resources/deployments`                                | 2018-02-01         |
 | `Microsoft.Insights/ActivityLogAlerts`                           | 2017-04-01         |
@@ -170,7 +170,7 @@ Tag names and tag values can be provided as needed. A tag can be left without a 
 
 | Output Name                  | Type   | Description                                              |
 | :--------------------------- | :----- | :------------------------------------------------------- |
-| `activityLogAlertResourceId` | string | The Resource Id of the Alert deployed.                   |
+| `activityLogAlertResourceId` | string | The Resource ID of the Alert deployed.                   |
 | `alertName`                  | string | The Name of the Alert.                                   |
 | `deploymentResourceGroup`    | string | The name of the Resource Group the Alert was created in. |
 

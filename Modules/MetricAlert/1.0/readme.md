@@ -4,7 +4,7 @@ This module deploys an Alert based on metrics
 
 ## Resource types
 
-| Resource Type                                               | ApiVersion         |
+| Resource Type                                               | APIVersion         |
 | :---------------------------------------------------------- | :----------------- |
 | `Microsoft.Resources/deployments`                           | 2018-02-01         |
 | `Microsoft.Insights/metricAlerts`                           | 2018-03-01         |
@@ -162,7 +162,7 @@ Tag names and tag values can be provided as needed. A tag can be left without a 
 | :------------------------ | :----- | :---------------------------------------------------------- |
 | `alertName`               | string | The name of the created database.                           |
 | `deploymentResourceGroup` | string | The name of the Resource Group the Resource was created in. |
-| `metricAlertResourceId`   | string | The Resource Id of the Alert deployed.                      |
+| `metricAlertResourceId`   | string | The Resource ID of the Alert deployed.                      |
 
 ## Considerations
 

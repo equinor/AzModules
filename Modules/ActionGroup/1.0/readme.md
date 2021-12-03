@@ -4,7 +4,7 @@ This module deploys an Action Group
 
 ## Resource Types
 
-| Resource Type                                               | Api Version        |
+| Resource Type                                               | API Version        |
 | :---------------------------------------------------------- | :----------------- |
 | `Microsoft.Resources/deployments`                           | 2018-02-01         |
 | `microsoft.insights/actionGroups`                           | 2019-06-01         |
@@ -127,7 +127,7 @@ Tag names and tag values can be provided as needed. A tag can be left without a 
 | Output Name               | Type   | Description                                                     |
 | :------------------------ | :----- | :-------------------------------------------------------------- |
 | `actionGroupName`         | string | The Name of the Azure Action Group.                             |
-| `actionGroupResourceId`   | string | The Resource Ids of the Action Group deployed.                  |
+| `actionGroupResourceId`   | string | The Resource IDs of the Action Group deployed.                  |
 | `deploymentResourceGroup` | string | The name of the Resource Group the Action Group was created in. |
 
 ## Considerations

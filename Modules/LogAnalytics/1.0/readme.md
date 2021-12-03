@@ -4,7 +4,7 @@ This template deploys Log Analytics.
 
 ## Resource types
 
-| ResourceType                                                         | ApiVersion         |
+| ResourceType                                                         | APIVersion         |
 | :------------------------------------------------------------------- | :----------------- |
 | `Microsoft.Resources/deployments`                                    | 2018-02-01         |
 | `Microsoft.OperationalInsights/workspaces`                           | 2017-03-15-preview |
@@ -120,10 +120,10 @@ Tag names and tag values can be provided as needed. A tag can be left without a 
 | Output Name                          | Type         | Description                                              |
 | :----------------------------------- | :----------- | :------------------------------------------------------- |
 | `logAnalyticsPrimarySharedKey`       | securestring | The Primary Shared Key for Log Analytics.                |
-| `logAnalyticsWorkspaceId`            | string       | The Workspace Id for Log Analytics.                      |
+| `logAnalyticsWorkspaceId`            | string       | The Workspace ID for Log Analytics.                      |
 | `logAnalyticsWorkspaceName`          | string       | The Name of the Log Analytics workspace deployed.        |
 | `logAnalyticsWorkspaceResourceGroup` | string       | The Resource Group log analytics was deployed to.        |
-| `logAnalyticsWorkspaceResourceId`    | string       | The Resource Id of the Log Analytics workspace deployed. |
+| `logAnalyticsWorkspaceResourceId`    | string       | The Resource ID of the Log Analytics workspace deployed. |
 
 ## Considerations
 
