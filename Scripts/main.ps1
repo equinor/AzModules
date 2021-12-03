@@ -134,6 +134,9 @@ foreach ($ParameterFile in $ParameterFiles) {
         { $_ -in '.json', '.bicep' } {
             Write-Output "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - ARM ($_) module"
             switch ($Action) {
+                'WhatIf' {
+                    $Operation = 'what-if'
+                }
                 'Validate' {
                     $Operation = 'validate'
                 }
@@ -147,13 +150,6 @@ foreach ($ParameterFile in $ParameterFiles) {
                     throw "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Action not supported"
                 }
             }
-
-            # Dont really need to double check the JSON in this case i think
-            #Write-Output "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Test parameter file"
-            #if (! (Test-JSONParameters -ParameterFilePath $ParameterFile.FullName)) {
-            #    throw "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Test parameter file - Failed"
-            #}
-            #Write-Output "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Test parameter file - Successfull"
 
             $Schema = (Get-Content -Raw -Path $ParameterFile | ConvertFrom-Json).'$schema'
             if ($Schema -notmatch '\/deploymentParameters.json#$') {
@@ -254,28 +250,28 @@ foreach ($ParameterFile in $ParameterFiles) {
                 break
             }
 
-            Write-Output '    Showing DeploymentOutput:'
-            $DeploymentOutput | Select-Object -ExcludeProperty properties
-            Write-Output '    Showing DeploymentOutput.properties:'
-            $DeploymentOutput | Select-Object -ExpandProperty properties
-            Write-Output '    Showing DeploymentOutput.properties.parameters:'
-            $DeploymentOutput.properties | Select-Object -ExpandProperty parameters
-
-            $DeploymentOutputObject = New-Object -TypeName PSCustomObject
-            foreach ($Output in $DeploymentOutput.properties.outputs.PSObject.Properties) {
-                $Name = $Output.Name
-                $Value = $Output.Value.Value
-                $DeploymentOutputObject | Add-Member -NotePropertyName $Name -NotePropertyValue $Value
-            }
-            $DeploymentOutputObjects += $DeploymentOutputObject
-
-            <#
-            $RemoveFilePath = "$ModuleFolder/Scripts/Remove-Module.ps1"
-            if (Test-Path -Path $RemoveFilePath) {
-                $RemoveFilePath
+            if ($Action -eq 'WhatIf') {
+                Write-Output '    Showing WhatIfOutput:'
+                $DeploymentOutput
+                Write-Output "::set-output name=Output::$DeploymentOutput"
             } else {
-                'Remove based on tags'
-            }#>
+                Write-Output '    Showing DeploymentOutput:'
+                $DeploymentOutput | Select-Object -ExcludeProperty properties
+                Write-Output '    Showing DeploymentOutput.properties:'
+                $DeploymentOutput | Select-Object -ExpandProperty properties
+                Write-Output '    Showing DeploymentOutput.properties.parameters:'
+                $DeploymentOutput.properties | Select-Object -ExpandProperty parameters
+
+                $DeploymentOutputObject = New-Object -TypeName PSCustomObject
+                foreach ($Output in $DeploymentOutput.properties.outputs.PSObject.Properties) {
+                    $Name = $Output.Name
+                    $Value = $Output.Value.Value
+                    $DeploymentOutputObject | Add-Member -NotePropertyName $Name -NotePropertyValue $Value
+                }
+                $DeploymentOutputObjects += $DeploymentOutputObject
+                Write-Output "::set-output name=Output::$($DeploymentOutputObjects | ConvertTo-Json -Compress -Depth 100)"
+            }
+
         }
         '.yml' {
             Write-Output "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Ansiable module"
@@ -291,8 +287,6 @@ foreach ($ParameterFile in $ParameterFiles) {
 }
 
 Write-Output '::endgroup::'
-
-Write-Output "::set-output name=Output::$($DeploymentOutputObjects | ConvertTo-Json -Compress -Depth 100)"
 
 New-GitHubLogGroup -Title "$Task-$Action-$ModuleName-$ModuleVersion-Output"
 return $DeploymentOutputObjects
