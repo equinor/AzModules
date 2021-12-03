@@ -208,7 +208,11 @@ foreach ($ParameterFile in $ParameterFiles) {
                 $Parameters += " $ParameterOverrides"
             }
 
-            $cmd = "az deployment $Scope $Operation $Target $DeploymentNameParameter $Template $LocationParam $Parameters --output json | ConvertFrom-Json"
+            if ($Action -eq 'WhatIf') {
+                $cmd = "az deployment $Scope $Operation $Target $DeploymentNameParameter $Template $LocationParam $Parameters"
+            } else {
+                $cmd = "az deployment $Scope $Operation $Target $DeploymentNameParameter $Template $LocationParam $Parameters --output json | ConvertFrom-Json"
+            }
 
             Write-Output "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - using:"
             $cmd
@@ -220,13 +224,13 @@ foreach ($ParameterFile in $ParameterFiles) {
                 try {
                     $DeploymentOutput = Invoke-Expression -Command $cmd -ErrorAction Stop
                 } catch {
-                    Write-Warning "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Attempt $Retry/$Retries - Failiure cought"
+                    Write-Warning "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Attempt $Retry/$Retries - Failure caught"
                     $Failed = $true
                 }
                 $DeploymentExecutionStatus = $LASTEXITCODE
 
                 if ($Failed -or ($DeploymentExecutionStatus -ne 0)) {
-                    Write-Warning "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Attempt $Retry/$Retries - Failiure."
+                    Write-Warning "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Attempt $Retry/$Retries - Failure."
                     Write-Warning "    Command execution status: $DeploymentExecutionStatus"
                     Write-Output '    Retreiving deployment information.'
                     $DeploymentResult = Invoke-Expression -Command "az deployment $Scope list $Target --output json" | ConvertFrom-Json | Where-Object name -EQ $DeploymentName
