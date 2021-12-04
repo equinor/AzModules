@@ -256,14 +256,12 @@ foreach ($ParameterFile in $ParameterFiles) {
 
             if ($Action -eq 'WhatIf') {
                 Write-Output '    Showing WhatIfOutput:'
-                $Output += @"
-----------------------------------------------------------------------
-$DeploymentName
-
-$DeploymentOutput
-----------------------------------------------------------------------
-"@
-                Write-Output "::set-output name=Output::$Output"
+                $DeploymentOutput
+                "## $DeploymentName" | Out-File -Path /tmp/OUTPUT.md -Append
+                '```' | Out-File -Path /tmp/OUTPUT.md -Append
+                $DeploymentOutput | Out-File -Path /tmp/OUTPUT.md -Append
+                '```' | Out-File -Path /tmp/OUTPUT.md -Append
+                Write-Output "::set-output name=Output::$DeploymentOutput"
             } else {
                 Write-Output '    Showing DeploymentOutput:'
                 $DeploymentOutput | Select-Object -ExcludeProperty properties
