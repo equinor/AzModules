@@ -209,7 +209,7 @@ foreach ($ParameterFile in $ParameterFiles) {
             }
 
             if ($Action -eq 'WhatIf') {
-                $cmd = "az deployment $Scope $Operation $Target $DeploymentNameParameter $Template $LocationParam $Parameters"
+                $cmd = "az deployment $Scope $Operation $Target $DeploymentNameParameter $Template $LocationParam $Parameters --output json --no-pretty-print"
             } else {
                 $cmd = "az deployment $Scope $Operation $Target $DeploymentNameParameter $Template $LocationParam $Parameters --output json | ConvertFrom-Json"
             }
@@ -256,8 +256,10 @@ foreach ($ParameterFile in $ParameterFiles) {
 
             if ($Action -eq 'WhatIf') {
                 Write-Output '    Showing WhatIfOutput:'
-                $DeploymentOutput
-                Write-Output "::set-output name=Output::$DeploymentOutput"
+                $Output = @"
+$DeploymentOutput
+"@
+                Write-Output "::set-output name=Output::$Output"
             } else {
                 Write-Output '    Showing DeploymentOutput:'
                 $DeploymentOutput | Select-Object -ExcludeProperty properties
