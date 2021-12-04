@@ -209,7 +209,7 @@ foreach ($ParameterFile in $ParameterFiles) {
             }
 
             if ($Action -eq 'WhatIf') {
-                $cmd = "az deployment $Scope $Operation $Target $DeploymentNameParameter $Template $LocationParam $Parameters --output json --no-pretty-print"
+                $cmd = "az deployment $Scope $Operation $Target $DeploymentNameParameter $Template $LocationParam $Parameters --exclude-change-types Ignore"
             } else {
                 $cmd = "az deployment $Scope $Operation $Target $DeploymentNameParameter $Template $LocationParam $Parameters --output json | ConvertFrom-Json"
             }
@@ -256,8 +256,12 @@ foreach ($ParameterFile in $ParameterFiles) {
 
             if ($Action -eq 'WhatIf') {
                 Write-Output '    Showing WhatIfOutput:'
-                $Output = @"
+                $Output += @"
+----------------------------------------------------------------------
+$DeploymentName
+
 $DeploymentOutput
+----------------------------------------------------------------------
 "@
                 Write-Output "::set-output name=Output::$Output"
             } else {
@@ -280,7 +284,7 @@ $DeploymentOutput
 
         }
         '.yml' {
-            Write-Output "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Ansiable module"
+            Write-Output "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Ansible module"
         }
         '.tf' {
             Write-Output "$Task-$Action-$ModuleName-$ModuleVersion-$($ParameterFile.name) - Terraform module"
