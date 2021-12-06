@@ -46,7 +46,6 @@ jobs:
           Action: Deploy
           ParameterFolderPath: ${{ env.ModulesPath }}/${{ env.ModuleName }}/${{ env.ModuleVersion }}/Parameters
 
-
       - name: 'Show Output'
         shell: pwsh
         run: |
