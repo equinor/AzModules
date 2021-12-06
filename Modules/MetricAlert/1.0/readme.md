@@ -4,7 +4,7 @@ This module deploys an Alert based on metrics
 
 ## Resource types
 
-| Resource Type                                               | APIVersion         |
+| Resource Type                                               | API Version        |
 | :---------------------------------------------------------- | :----------------- |
 | `Microsoft.Resources/deployments`                           | 2018-02-01         |
 | `Microsoft.Insights/metricAlerts`                           | 2018-03-01         |
