@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceGroupName": {
-      "value": ""
+      "value": "eq-validation-rg"
     },
     "policyAssignmentName": {
       "value": "Add a tag to resources"
